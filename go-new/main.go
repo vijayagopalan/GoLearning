@@ -5,6 +5,7 @@ import (
 	"fmt"
 	menus "new-app/menu"
 	"strings"
+	"sync"
 )
 
 type printer interface {
@@ -108,7 +109,26 @@ func main() {
 	}
 
 	c := clone(scores)
-
 	fmt.Print(c)
+	fmt.Print("\n" + strings.Repeat("-", 10) + "\n")
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		fmt.Print("async call" + "\n")
+		wg.Done()
+	}()
+	fmt.Print("sync call" + "\n")
+	wg.Wait()
+	wg.Add(1)
 
+	ch := make(chan string)
+	go func() {
+		ch <- "hi"
+	}()
+
+	go func() {
+		fmt.Print(<-ch)
+		wg.Done()
+	}()
+	wg.Wait()
 }
