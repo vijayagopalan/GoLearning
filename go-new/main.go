@@ -1,9 +1,47 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	menus "new-app/menu"
+	"strings"
 )
+
+type printer interface {
+	Print() string
+}
+
+type user struct {
+	id   int
+	name string
+}
+
+func (u user) Print() string {
+	return ("user id is " + fmt.Sprint(u.id) + "and  name is " + u.name)
+}
+
+type record struct {
+	name   string
+	prices map[string]float32
+}
+
+func (mi record) Print() string {
+	var b bytes.Buffer
+	b.WriteString(mi.name + "\n")
+	b.WriteString(strings.Repeat("-", 10) + "\n")
+	for i, v := range mi.prices {
+		fmt.Println("index", i, "value", v)
+	}
+	return b.String()
+}
+
+func clone[V any](inp []V) []V {
+	new_value := make([]V, len(inp))
+	for ind, val := range inp {
+		new_value[ind] = val
+	}
+	return new_value
+}
 
 func main() {
 	flag := false
@@ -48,5 +86,29 @@ func main() {
 			fmt.Println("erro. please elect right option")
 		}
 	}
+	var p printer
+	var result string
+	p = user{id: 1, name: "abc"}
+	result = p.Print()
+	fmt.Print(result)
+	p = record{name: "coffer", prices: map[string]float32{
+		"itm1": 10,
+		"itm2": 10,
+		"itm3": 10,
+		"itm4": 10,
+	}}
+	result = p.Print()
+	fmt.Print(result)
+
+	scores := []float32{
+		10.0,
+		20.0,
+		30.0,
+		40.0,
+	}
+
+	c := clone(scores)
+
+	fmt.Print(c)
 
 }
