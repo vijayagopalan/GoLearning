@@ -1,7 +1,8 @@
 package main
 
 import (
-	signup "go-db/handlers"
+	signin "go-db/signinhandler"
+	signup "go-db/signuphandler"
 	"net/http"
 
 	_ "github.com/lib/pq"
@@ -9,7 +10,7 @@ import (
 
 func main() {
 	http.HandleFunc("/signup", signup.SignupUser)
-	http.HandleFunc("/signIn", signup.SigninUser)
+	http.HandleFunc("/signin", signin.SigninUser)
 	http.HandleFunc("/fbconcern", signup.Fbconcern)
 	http.ListenAndServe(":5000", nil)
 }

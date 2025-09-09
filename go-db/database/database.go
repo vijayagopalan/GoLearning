@@ -17,15 +17,12 @@ func ConnectDB() (*sql.DB, error) {
 		database = "ECommerce"
 	)
 	connString := fmt.Sprintf("host= %s port= %d user= %s password= %s dbname= %s sslmode=disable", host, port, user, password, database)
-	// Open connection
-	if DB != nil {
-		return DB, nil
-	}
-	DB, err := sql.Open("postgres", connString)
+
+	dbConn, err := sql.Open("postgres", connString)
 	if err != nil {
 		return DB, err
 	}
-
+	DB = dbConn
 	// Verify DB connection
 	err = DB.Ping()
 	if err != nil {
@@ -36,9 +33,9 @@ func ConnectDB() (*sql.DB, error) {
 	return DB, err
 }
 
-// func Close() error {
-// 	if Db != nil {
-// 		return Db.Close()
-// 	}
-// 	return nil
-// }
+func Close() error {
+	if DB != nil {
+		return DB.Close()
+	}
+	return nil
+}
